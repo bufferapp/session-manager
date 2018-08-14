@@ -4,7 +4,8 @@
   "description": "Buffer session manager",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "lint": "eslint --ext .js test/ src/",
+    "test": "npm run lint && jest",
     "test-watch": "jest --watch"
   },
   "author": "hharnisc@gmail.com",
