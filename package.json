@@ -2,11 +2,13 @@
   "name": "@bufferapp/session-manager",
   "version": "0.6.4-beta-01",
   "description": "Buffer session manager",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "lint": "eslint --ext .js test/ src/",
     "test": "npm run lint && jest",
-    "test-watch": "jest --watch"
+    "test-watch": "jest --watch",
+    "build": "babel src -d lib",
+    "prepublish": "babel src -d lib"
   },
   "author": "hharnisc@gmail.com",
   "dependencies": {
@@ -19,6 +21,10 @@
       "env"
     ]
   },
+  "files": [
+    "lib",
+    "src"
+  ],
   "eslintConfig": {
     "parser": "babel-eslint",
     "env": {
@@ -45,6 +51,7 @@
     "access": "public"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.6",
     "babel-jest": "^23.4.2",
     "babel-preset-env": "^1.7.0",

@@ -1,12 +1,12 @@
-const cookieName = ({ production }) =>
+export const cookieName = ({ production }) =>
   production ? 'buffer_session' : 'local_buffer_session'
 
-const cookieDomain = ({ production }) =>
+export const cookieDomain = ({ production }) =>
   production ? '.buffer.com' : '.local.buffer.com'
 
-const getCookie = ({ req, name }) => req.cookies[name]
+export const getCookie = ({ req, name }) => req.cookies[name]
 
-const writeCookie = ({
+export const writeCookie = ({
   name,
   value,
   domain,
@@ -23,15 +23,7 @@ const writeCookie = ({
   })
 }
 
-const destroyCookie = ({ name, domain, res }) =>
+export const destroyCookie = ({ name, domain, res }) =>
   res.clearCookie(name, {
     domain,
   })
-
-module.exports = {
-  cookieName,
-  cookieDomain,
-  getCookie,
-  writeCookie,
-  destroyCookie,
-}

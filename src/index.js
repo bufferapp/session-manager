@@ -1,33 +1,17 @@
-const {
+export {
   createSession,
   getSession,
   updateSession,
   destroySession,
   sessionClient,
-} = require('./session')
+} from './session'
 
-const { logoutUrl, loginServiceUrl, sessionServiceUrl } = require('./urls')
+export { logoutUrl, loginServiceUrl, sessionServiceUrl } from './urls'
 
-const {
+export {
   cookieName,
   cookieDomain,
   getCookie,
   writeCookie,
   destroyCookie,
-} = require('./cookies')
-
-module.exports = {
-  createSession,
-  getSession,
-  updateSession,
-  destroySession,
-  logoutUrl,
-  loginServiceUrl,
-  sessionServiceUrl,
-  sessionClient,
-  cookieName,
-  cookieDomain,
-  getCookie,
-  writeCookie,
-  destroyCookie,
-}
+} from './cookies'

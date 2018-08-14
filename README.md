@@ -1,2 +1,3 @@
 # session-manager
-Buffer Session Manager Package
+
+Buffer session manager

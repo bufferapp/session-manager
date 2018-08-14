@@ -1,23 +1,23 @@
-const jwt = require('jsonwebtoken')
-const RPCClient = require('micro-rpc-client')
-const {
+import jwt from 'jsonwebtoken'
+import RPCClient from 'micro-rpc-client'
+import {
   cookieName,
   cookieDomain,
   getCookie,
   writeCookie,
   destroyCookie,
-} = require('./cookies')
+} from './cookies'
 
-const { sessionServiceUrl } = require('./urls')
+import { sessionServiceUrl } from './urls'
 
-const sessionClient = ({ sessionVersion, production }) =>
+export const sessionClient = ({ sessionVersion, production }) =>
   new RPCClient({ url: sessionServiceUrl({ sessionVersion, production }) })
 
 // will need this in controller for creating a session with a version
 // const createSessionServiceVersion = () =>
 //   process.env.SESSION_VERSION;
 
-const createSession = async ({
+export const createSession = async ({
   session,
   production,
   res,
@@ -44,7 +44,7 @@ const createSession = async ({
   }
 }
 
-const getSession = async ({ req, production, sessionKeys }) => {
+export const getSession = async ({ req, production, sessionKeys }) => {
   const sessionCookie = getCookie({
     name: cookieName({ production }),
     req,
@@ -64,7 +64,7 @@ const getSession = async ({ req, production, sessionKeys }) => {
   return session
 }
 
-const updateSession = async ({ session, req, production }) => {
+export const updateSession = async ({ session, req, production }) => {
   const sessionCookie = getCookie({
     name: cookieName({ production }),
     req,
@@ -80,7 +80,7 @@ const updateSession = async ({ session, req, production }) => {
   })
 }
 
-const destroySession = async ({ req, res, production }) => {
+export const destroySession = async ({ req, res, production }) => {
   const sessionCookieName = cookieName({ production })
   const sessionCookie = getCookie({
     name: sessionCookieName,
@@ -104,12 +104,4 @@ const destroySession = async ({ req, res, production }) => {
     domain: '.buffer.com',
     res,
   })
-}
-
-module.exports = {
-  createSession,
-  getSession,
-  updateSession,
-  destroySession,
-  sessionClient,
 }

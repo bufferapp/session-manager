@@ -1,9 +1,9 @@
-const ObjectPath = require('object-path')
-const { getSession } = require('./session')
-const { loginServiceUrl } = require('./urls')
-const { cookieName, cookieDomain, destroyCookie } = require('./cookies')
+import ObjectPath from 'object-path'
+import { getSession } from './session'
+import { loginServiceUrl } from './urls'
+import { cookieName, cookieDomain, destroyCookie } from './cookies'
 
-const setRequestSession = ({ production, sessionKeys }) => async (
+export const setRequestSession = ({ production, sessionKeys }) => async (
   req,
   res,
   next,
@@ -43,7 +43,7 @@ const setRequestSession = ({ production, sessionKeys }) => async (
   }
 }
 
-const validateSession = ({ requiredSessionKeys, production }) => (
+export const validateSession = ({ requiredSessionKeys, production }) => (
   req,
   res,
   next,
@@ -62,9 +62,4 @@ const validateSession = ({ requiredSessionKeys, production }) => (
   )
   const baseUrl = `${loginServiceUrl({ production })}/login/`
   res.redirect(`${baseUrl}?redirect=${redirect}`)
-}
-
-module.exports = {
-  setRequestSession,
-  validateSession,
 }
