@@ -15,3 +15,8 @@ export {
   writeCookie,
   destroyCookie,
 } from './cookies'
+
+export {
+  setRequestSession as setRequestSessionMiddleware,
+  validateSession as validateSessionMiddleware,
+} from './middleware'

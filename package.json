@@ -1,6 +1,6 @@
 {
   "name": "@bufferapp/session-manager",
-  "version": "0.6.4",
+  "version": "0.7.0",
   "description": "Buffer session manager",
   "main": "lib/index.js",
   "scripts": {
@@ -18,7 +18,15 @@
   },
   "babel": {
     "presets": [
-      "env"
+      [
+        "env",
+        {
+          "targets": {
+            "node": "8"
+          },
+          "browsers": "> 3%"
+        }
+      ]
     ]
   },
   "files": [
