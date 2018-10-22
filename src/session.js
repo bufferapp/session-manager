@@ -10,8 +10,8 @@ import {
 
 import { sessionServiceUrl } from './urls'
 
-export const sessionClient = ({ sessionVersion, production, isStaging }) =>
-  new RPCClient({ url: sessionServiceUrl({ sessionVersion, production, isStaging }) })
+export const sessionClient = ({ sessionVersion, production }) =>
+  new RPCClient({ url: sessionServiceUrl({ sessionVersion, production }) })
 
 // will need this in controller for creating a session with a version
 // const createSessionServiceVersion = () =>
@@ -20,7 +20,6 @@ export const sessionClient = ({ sessionVersion, production, isStaging }) =>
 export const createSession = async ({
   session,
   production,
-  isStaging,
   res,
   userId,
   sessionVersion,
@@ -29,7 +28,6 @@ export const createSession = async ({
   const { token } = await sessionClient({
     sessionVersion,
     production,
-    isStaging,
   }).call('create', {
     session,
     userId,
@@ -46,7 +44,7 @@ export const createSession = async ({
   }
 }
 
-export const getSession = async ({ req, production, isStaging, sessionKeys }) => {
+export const getSession = async ({ req, production, sessionKeys }) => {
   const sessionCookie = getCookie({
     name: cookieName({ production }),
     req,
@@ -58,7 +56,6 @@ export const getSession = async ({ req, production, isStaging, sessionKeys }) =>
   const session = await sessionClient({
     sessionVersion,
     production,
-    isStaging,
   }).call('get', {
     token: sessionCookie,
     keys: sessionKeys,
@@ -67,7 +64,7 @@ export const getSession = async ({ req, production, isStaging, sessionKeys }) =>
   return session
 }
 
-export const updateSession = async ({ session, req, production, isStaging }) => {
+export const updateSession = async ({ session, req, production }) => {
   const sessionCookie = getCookie({
     name: cookieName({ production }),
     req,
@@ -76,7 +73,6 @@ export const updateSession = async ({ session, req, production, isStaging }) => 
   return sessionClient({
     sessionVersion,
     production,
-    isStaging,
   }).call('update', {
     session,
     token: sessionCookie,
@@ -84,7 +80,7 @@ export const updateSession = async ({ session, req, production, isStaging }) => 
   })
 }
 
-export const destroySession = async ({ req, res, production, isStaging }) => {
+export const destroySession = async ({ req, res, production }) => {
   const sessionCookieName = cookieName({ production })
   const sessionCookie = getCookie({
     name: sessionCookieName,
@@ -94,7 +90,6 @@ export const destroySession = async ({ req, res, production, isStaging }) => {
   await sessionClient({
     sessionVersion,
     production,
-    isStaging,
   }).call('destroy', {
     token: sessionCookie,
     sessionVersion,

@@ -3,7 +3,7 @@ import { getSession } from './session'
 import { loginServiceUrl } from './urls'
 import { cookieName, cookieDomain, destroyCookie } from './cookies'
 
-export const setRequestSession = ({ production, isStaging, sessionKeys, redirectUrl }) => async (
+export const setRequestSession = ({ production, sessionKeys }) => async (
   req,
   res,
   next,
@@ -12,7 +12,6 @@ export const setRequestSession = ({ production, isStaging, sessionKeys, redirect
     const session = await getSession({
       req,
       production,
-      isStaging,
       sessionKeys,
     })
     req.session = session
@@ -36,19 +35,15 @@ export const setRequestSession = ({ production, isStaging, sessionKeys, redirect
       domain: '.buffer.com',
       res,
     })
-
-    if (!redirectUrl) {
-      const redirect = encodeURIComponent(
-        `https://${req.get('host')}${req.originalUrl}`,
-      )
-      const baseUrl = `${loginServiceUrl({ production })}/login/`
-      redirectUrl = `${baseUrl}?redirect=${redirect}`
-    }
-    res.redirect(redirectUrl)
+    const redirect = encodeURIComponent(
+      `https://${req.get('host')}${req.originalUrl}`,
+    )
+    const baseUrl = `${loginServiceUrl({ production })}/login/`
+    res.redirect(`${baseUrl}?redirect=${redirect}`)
   }
 }
 
-export const validateSession = ({ requiredSessionKeys, production, redirectUrl }) => (
+export const validateSession = ({ requiredSessionKeys, production }) => (
   req,
   res,
   next,
@@ -62,12 +57,9 @@ export const validateSession = ({ requiredSessionKeys, production, redirectUrl }
   if (allValidKeys && req.session) {
     return next()
   }
-  if (!redirectUrl) {
-    const redirect = encodeURIComponent(
-      `https://${req.get('host')}${req.originalUrl}`,
-    )
-    const baseUrl = `${loginServiceUrl({ production })}/login/`
-    redirectUrl = `${baseUrl}?redirect=${redirect}`
-  }
-  res.redirect(redirectUrl)
+  const redirect = encodeURIComponent(
+    `https://${req.get('host')}${req.originalUrl}`,
+  )
+  const baseUrl = `${loginServiceUrl({ production })}/login/`
+  res.redirect(`${baseUrl}?redirect=${redirect}`)
 }
