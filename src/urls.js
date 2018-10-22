@@ -7,5 +7,5 @@ export const logoutUrl = ({ production }) =>
   `${loginServiceUrl({ production })}/logout/?redirect=${currentWindowUrl()}`
 
 // TODO: remove beta '1' version after its been removed
-export const sessionServiceUrl = ({ sessionVersion = '1', production }) =>
-  `http://session-service-${sessionVersion}${production ? '.core' : ':3000'}`
+export const sessionServiceUrl = ({ sessionVersion = '1', production, isStaging }) =>
+  `http://session-service-${sessionVersion}${isStaging ? '.reply-dev' : (production ? '.core' : ':3000')}`

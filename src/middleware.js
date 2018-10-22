@@ -3,7 +3,7 @@ import { getSession } from './session'
 import { loginServiceUrl } from './urls'
 import { cookieName, cookieDomain, destroyCookie } from './cookies'
 
-export const setRequestSession = ({ production, sessionKeys }) => async (
+export const setRequestSession = ({ production, isStaging, sessionKeys, redirectUrl }) => async (
   req,
   res,
   next,
@@ -12,6 +12,7 @@ export const setRequestSession = ({ production, sessionKeys }) => async (
     const session = await getSession({
       req,
       production,
+      isStaging,
       sessionKeys,
     })
     req.session = session
@@ -35,15 +36,19 @@ export const setRequestSession = ({ production, sessionKeys }) => async (
       domain: '.buffer.com',
       res,
     })
-    const redirect = encodeURIComponent(
-      `https://${req.get('host')}${req.originalUrl}`,
-    )
-    const baseUrl = `${loginServiceUrl({ production })}/login/`
-    res.redirect(`${baseUrl}?redirect=${redirect}`)
+
+    if (!redirectUrl) {
+      const redirect = encodeURIComponent(
+        `https://${req.get('host')}${req.originalUrl}`,
+      )
+      const baseUrl = `${loginServiceUrl({ production })}/login/`
+      redirectUrl = `${baseUrl}?redirect=${redirect}`
+    }
+    res.redirect(redirectUrl)
   }
 }
 
-export const validateSession = ({ requiredSessionKeys, production }) => (
+export const validateSession = ({ requiredSessionKeys, production, redirectUrl }) => (
   req,
   res,
   next,
@@ -57,9 +62,12 @@ export const validateSession = ({ requiredSessionKeys, production }) => (
   if (allValidKeys && req.session) {
     return next()
   }
-  const redirect = encodeURIComponent(
-    `https://${req.get('host')}${req.originalUrl}`,
-  )
-  const baseUrl = `${loginServiceUrl({ production })}/login/`
-  res.redirect(`${baseUrl}?redirect=${redirect}`)
+  if (!redirectUrl) {
+    const redirect = encodeURIComponent(
+      `https://${req.get('host')}${req.originalUrl}`,
+    )
+    const baseUrl = `${loginServiceUrl({ production })}/login/`
+    redirectUrl = `${baseUrl}?redirect=${redirect}`
+  }
+  res.redirect(redirectUrl)
 }
