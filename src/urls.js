@@ -13,7 +13,9 @@ export const logoutUrl = ({ production }) =>
 // TODO: remove beta '1' version after its been removed
 export const sessionServiceUrl = ({ sessionVersion = '1', production }) => {
   if (!process.env.SESSION_SERVICE_URL)
-    return `http://session-service-${sessionVersion}${production ? '.core' : ':3000'}`
+    return `http://session-service-${sessionVersion}${
+      production ? '.core' : ':3000'
+    }`
 
   return process.env.SESSION_SERVICE_URL
 }
