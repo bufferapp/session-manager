@@ -1,6 +1,6 @@
 {
   "name": "@bufferapp/session-manager",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "Buffer session manager",
   "main": "lib/index.js",
   "scripts": {
