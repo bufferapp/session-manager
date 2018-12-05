@@ -17,43 +17,11 @@ export const sessionClient = ({ sessionVersion, production }) =>
 // const createSessionServiceVersion = () =>
 //   process.env.SESSION_VERSION;
 
-export const createSession = async ({
-  sessionVersion,
-  production,
-  session,
-  res,
-  userId,
-  accountId,
-  ttl,
-}) => {
-  // this will throw errors when a session cannot be created
-  const { token } = await sessionClient({
-    sessionVersion,
-    production,
-  }).call('create', {
-    session,
-    userId,
-    accountId,
-    ttl,
-  })
-  writeCookie({
-    name: cookieName({ production }),
-    value: token,
-    domain: cookieDomain({ production }),
-    res,
-  })
-  return {
-    token,
-    session,
-  }
-}
-
 export const createOrUpdateSession = async ({
   sessionVersion,
   production,
   session,
   accountId,
-  ttl,
   req,
   res,
 }) => {
@@ -65,7 +33,36 @@ export const createOrUpdateSession = async ({
     return updateSession({ session, req, production });
   }
 
-  return createSession({ sessionVersion, production, session, res, accountId, ttl });
+  return createSession({ sessionVersion, production, session, res, accountId });
+}
+
+export const createSession = async ({
+  sessionVersion,
+  production,
+  session,
+  res,
+  userId,
+  accountId,
+}) => {
+  // this will throw errors when a session cannot be created
+  const { token } = await sessionClient({
+    sessionVersion,
+    production,
+  }).call('create', {
+    session,
+    userId,
+    accountId,
+  })
+  writeCookie({
+    name: cookieName({ production }),
+    value: token,
+    domain: cookieDomain({ production }),
+    res,
+  })
+  return {
+    token,
+    session,
+  }
 }
 
 export const getSession = async ({ req, production, sessionKeys }) => {
