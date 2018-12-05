@@ -1,8 +1,10 @@
 export {
   createSession,
+  createOrUpdateSession,
   getSession,
-  updateSession,
+  getActiveSessions,
   destroySession,
+  updateSession,
   sessionClient,
 } from './session'
 
