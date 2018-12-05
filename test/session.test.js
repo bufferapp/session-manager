@@ -1,6 +1,11 @@
 import RPCClient from 'micro-rpc-client'
 import jwt from 'jsonwebtoken'
-import { createSession, updateSession, destroySession } from '../src/session'
+import {
+  createSession,
+  updateSession,
+  destroySession,
+  createOrUpdateSession,
+} from '../src/session'
 
 describe('session', () => {
   describe('createSession', () => {
@@ -154,6 +159,64 @@ describe('session', () => {
       } catch (err) {
         expect(err.message).toBe(RPCClient.fakeErrorMessage)
       }
+    })
+  })
+
+  describe('createOrUpdateSession', () => {
+    it('should create a new session in production', async () => {
+      const res = {
+        cookie: jest.fn(),
+      }
+      const req = {
+        cookies: {},
+      }
+      const sessionClient = new RPCClient({ url: 'sometesturl' })
+      const expectedSession = {}
+      const { token, session } = await createOrUpdateSession({
+        session: expectedSession,
+        res,
+        req,
+        sessionClient,
+        production: true,
+      })
+      expect(RPCClient.prototype.call).toBeCalledWith('create', {
+        session: expectedSession,
+      })
+      expect(token).toBe(RPCClient.fakeAccessToken)
+      expect(session).toEqual(expectedSession)
+      expect(res.cookie).toBeCalledWith(
+        'buffer_session',
+        RPCClient.fakeAccessToken,
+        {
+          domain: '.buffer.com',
+          maxAge: 365 * 24 * 60 * 60 * 1000,
+          httpOnly: true,
+          secure: true,
+        },
+      )
+    })
+
+    it('should update a session in production', async () => {
+      const name = 'buffer_session'
+      const value = 'coooooookies'
+      const req = {
+        cookies: {
+          [name]: value,
+        },
+      }
+      const sessionClient = new RPCClient({ url: 'sometesturl' })
+      const expectedSession = {}
+      await createOrUpdateSession({
+        session: expectedSession,
+        req,
+        sessionClient,
+        production: true,
+      })
+      expect(RPCClient.prototype.call).toBeCalledWith('update', {
+        session: expectedSession,
+        token: value,
+        sessionVersion: jwt.fakeSessionVersion,
+      })
     })
   })
 

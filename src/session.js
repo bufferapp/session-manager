@@ -30,10 +30,10 @@ export const createOrUpdateSession = async ({
     req,
   })
   if (sessionCookie) {
-    return updateSession({ session, req, production });
+    return updateSession({ session, req, production })
   }
 
-  return createSession({ sessionVersion, production, session, res, accountId });
+  return createSession({ sessionVersion, production, session, res, accountId })
 }
 
 export const createSession = async ({
@@ -127,7 +127,11 @@ export const destroySession = async ({ req, res, production }) => {
   })
 }
 
-export const getActiveSessions = async ({ sessionVersion, production, userId }) => {
+export const getActiveSessions = async ({
+  sessionVersion,
+  production,
+  userId,
+}) => {
   const session = await sessionClient({
     sessionVersion,
     production,
