@@ -46,7 +46,6 @@ export const validateSession = ({ requiredSessionKeys, production }) => (
 
 export const ensureNoTFA = ({ production }) => (req, res, next) => {
   const isTFAInProgress = !!ObjectPath.get(req, 'session.global.tfa', false)
-  console.info('isTFAInProgress', isTFAInProgress)
   if (isTFAInProgress) {
     return cleanSessionAndRedirect(req, res, next, production, true)
   }
