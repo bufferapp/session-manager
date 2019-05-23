@@ -21,4 +21,5 @@ export {
 export {
   setRequestSession as setRequestSessionMiddleware,
   validateSession as validateSessionMiddleware,
+  ensureNoTFA as ensureNoTFAMiddleware,
 } from './middleware'

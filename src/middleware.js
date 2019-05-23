@@ -15,7 +15,7 @@ export const setRequestSession = ({ production, sessionKeys }) => async (
       sessionKeys,
     })
     req.session = session
-    next()
+    return next()
   } catch (e) {
     const bugsnag = req.app.get('bugsnag')
     if (bugsnag) {
@@ -23,23 +23,7 @@ export const setRequestSession = ({ production, sessionKeys }) => async (
         originalUrl: req.originalUrl,
       })
     }
-    // destroy the cookie(s) and redirect to the login page
-    // if getting the session failed for any reason
-    destroyCookie({
-      name: cookieName({ production }),
-      domain: cookieDomain({ production }),
-      res,
-    })
-    destroyCookie({
-      name: `${production ? '' : 'local'}bufferapp_ci_session`,
-      domain: '.buffer.com',
-      res,
-    })
-    const redirect = encodeURIComponent(
-      `https://${req.get('host')}${req.originalUrl}`,
-    )
-    const baseUrl = `${loginServiceUrl({ production })}/login/`
-    res.redirect(`${baseUrl}?redirect=${redirect}`)
+    return cleanSessionAndRedirect(req, res, next, production, true)
   }
 }
 
@@ -57,6 +41,39 @@ export const validateSession = ({ requiredSessionKeys, production }) => (
   if (allValidKeys && req.session) {
     return next()
   }
+  return cleanSessionAndRedirect(req, res, next, production, false)
+}
+
+export const ensureNoTFA = ({ production }) => (req, res, next) => {
+  const isTFAInProgress = !!ObjectPath.get(req, 'session.global.tfa', false)
+  if (isTFAInProgress) {
+    return cleanSessionAndRedirect(req, res, next, production, true)
+  }
+  return next()
+}
+
+function cleanSessionAndRedirect(
+  req,
+  res,
+  next,
+  production,
+  deleteSession = false,
+) {
+  if (deleteSession) {
+    // destroy the cookie(s) and redirect to the login page
+    // if getting the session failed for any reason
+    destroyCookie({
+      name: cookieName({ production }),
+      domain: cookieDomain({ production }),
+      res,
+    })
+    destroyCookie({
+      name: `${production ? '' : 'local'}bufferapp_ci_session`,
+      domain: '.buffer.com',
+      res,
+    })
+  }
+
   const redirect = encodeURIComponent(
     `https://${req.get('host')}${req.originalUrl}`,
   )
