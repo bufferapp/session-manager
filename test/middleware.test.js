@@ -1,4 +1,4 @@
-import RPCClient from 'micro-rpc-client'
+import RPCClient from '@bufferapp/micro-rpc-client'
 import jwt from 'jsonwebtoken'
 
 const { setRequestSession, validateSession } = require('../src/middleware')
