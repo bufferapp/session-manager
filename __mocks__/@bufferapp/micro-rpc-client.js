@@ -1,4 +1,4 @@
-const RPCClient = jest.genMockFromModule('micro-rpc-client')
+const RPCClient = jest.genMockFromModule('@bufferapp/micro-rpc-client')
 RPCClient.fakeAccessToken = 'someFakeAccessToken'
 RPCClient.fakeSession = {
   global: {

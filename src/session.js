@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import RPCClient from 'micro-rpc-client'
+import RPCClient from '@bufferapp/micro-rpc-client'
 import {
   cookieName,
   cookieDomain,
