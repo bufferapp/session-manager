@@ -1,4 +1,5 @@
 const currentWindowUrl = () => window.location.href
+const redirectUrl = () => encodeURIComponent(currentWindowUrl())
 
 export const loginServiceUrl = ({ production }) => {
   if (!process.env.SESSION_SERVICE_REDIRECT_URL)
@@ -8,7 +9,7 @@ export const loginServiceUrl = ({ production }) => {
 }
 
 export const logoutUrl = ({ production }) =>
-  `${loginServiceUrl({ production })}/logout/?redirect=${currentWindowUrl()}`
+  `${loginServiceUrl({ production })}/logout/?redirect=${redirectUrl()}`
 
 // TODO: remove beta '1' version after its been removed
 export const sessionServiceUrl = ({ sessionVersion = '1', production }) => {
