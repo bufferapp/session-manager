@@ -1,6 +1,6 @@
 {
   "name": "@bufferapp/session-manager",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Buffer session manager",
   "main": "lib/index.js",
   "scripts": {
@@ -14,7 +14,7 @@
   "dependencies": {
     "jsonwebtoken": "8.2.2",
     "@bufferapp/micro-rpc-client": "0.1.5",
-    "object-path": "^0.11.5"
+    "object-path": "^0.11.8"
   },
   "babel": {
     "presets": [
