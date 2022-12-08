@@ -34,7 +34,7 @@ export const validateSession = ({ requiredSessionKeys, production }) => (
 ) => {
   let allValidKeys = true
   requiredSessionKeys.forEach(key => {
-    if (!ObjectPath.has(req.session, key)) {
+    if (!ObjectPath.has(req.session, key) || !req.session[key]) {
       allValidKeys = false
     }
   })
