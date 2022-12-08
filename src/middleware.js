@@ -2,7 +2,6 @@ import ObjectPath from 'object-path'
 import { getSession } from './session'
 import { loginServiceUrl } from './urls'
 import { cookieName, cookieDomain, destroyCookie } from './cookies'
-import BuffLog from "@bufferapp/bufflog";
 
 export const setRequestSession = ({ production, sessionKeys }) => async (
   req,
@@ -38,11 +37,6 @@ export const validateSession = ({ requiredSessionKeys, production }) => (
     if (!ObjectPath.has(req.session, key) || !req.session[key]) {
       allValidKeys = false
     }
-  })
-  BuffLog.info('------ debugHenry', {
-    allValidKeys,
-    requiredSessionKeys,
-    session: req.session,
   })
   if (allValidKeys && req.session) {
     return next()
