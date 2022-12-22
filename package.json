@@ -13,7 +13,7 @@
   "author": "hharnisc@gmail.com",
   "dependencies": {
     "@bufferapp/micro-rpc-client": "0.1.5",
-    "jsonwebtoken": "8.2.2",
+    "jsonwebtoken": "9.0.0",
     "object-path": "^0.11.8"
   },
   "babel": {
