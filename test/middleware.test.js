@@ -75,6 +75,7 @@ describe('middleware', () => {
   describe('validateSession', () => {
     it('should call next with valid session', async () => {
       const requiredSessionKey = 'publish'
+      const host = 'someHost'
       const requiredSessionKeys = [`${requiredSessionKey}.accessToken`]
       const req = {
         session: {
@@ -82,8 +83,11 @@ describe('middleware', () => {
             accessToken: 'someAccessToken',
           },
         },
+        get: () => host,
       }
-      const res = {}
+      const res = {
+        redirect: jest.fn(),
+      }
       const next = jest.fn()
       const configuredMiddlware = validateSession({
         requiredSessionKeys,
@@ -148,6 +152,31 @@ describe('middleware', () => {
         session: {
           hello: {
             token: ':wave:',
+          },
+        },
+        originalUrl,
+        get: () => host,
+      }
+      const res = {
+        redirect: jest.fn(),
+      }
+      const next = jest.fn()
+      const configuredMiddlware = validateSession({
+        requiredSessionKeys,
+      })
+      await configuredMiddlware(req, res, next)
+      expect(next).not.toBeCalled()
+      expect(res.redirect).toBeCalled()
+    })
+
+    it('should call redirect with session key value is null', async () => {
+      const host = 'someHost'
+      const originalUrl = '/someUrl'
+      const requiredSessionKeys = ['hello.token']
+      const req = {
+        session: {
+          hello: {
+            token: null,
           },
         },
         originalUrl,
